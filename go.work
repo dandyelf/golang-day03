@@ -1,0 +1,9 @@
+go 1.21.6
+
+use (
+	./src/ex00
+	./src/ex01
+	./src/ex02
+	./src/ex03
+	./src/ex04
+)
