@@ -1,5 +1,5 @@
 BUILD_DIR := build
-TARGET := myFind
+TARGET := myElasticCli
 
 all: clean build test
 
@@ -8,27 +8,9 @@ build:
 
 test:
 	@echo '\n'\*************myFind test***************************'\n'
-	@echo Flag -d
-	./$(BUILD_DIR)/$(TARGET) -d ./tests
+	@echo Find in Elastic
+	./$(BUILD_DIR)/$(TARGET)
 	@echo
-	@echo Flag -f
-	./$(BUILD_DIR)/$(TARGET) -f ./tests
-	@echo
-	@echo Flag -sl
-	./$(BUILD_DIR)/$(TARGET) -f -sl ./tests
-	@echo
-	@echo Flag -ext
-	./$(BUILD_DIR)/$(TARGET) -f  -ext 'nc' ./tests
-	@echo
-	@echo Flag cros -f -d
-	./$(BUILD_DIR)/$(TARGET) -f -d ./tests
-	@echo
-	@echo Flag cros -f -d -ext
-	./$(BUILD_DIR)/$(TARGET) -f -d -ext 'nc' ./tests
-	@echo
-	@echo Flag -ext wt -f
-	./$(BUILD_DIR)/$(TARGET) -ext 'txt' ./tests
-
 	@echo \****************************************
 
 run:
