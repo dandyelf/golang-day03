@@ -7,7 +7,7 @@ build:
 	go build -o $(BUILD_DIR)/$(TARGET) main.go
 
 test:
-	@echo '\n'\*************myFind test***************************'\n'
+	@echo '\n'\*************$(TARGET) test***************************'\n'
 	@echo Find in Elastic
 	./$(BUILD_DIR)/$(TARGET)
 	@echo

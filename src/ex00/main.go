@@ -1,20 +1,22 @@
 package main
 
+//curl -XDELETE "http://localhost:9200/places"
+
 import (
-	"fmt"
+	// "fmt"
+	_ "embed"
+	"github.com/elastic/go-elasticsearch/v8"
 	"log"
 	"strings"
-
-	"github.com/elastic/go-elasticsearch/v8"
 )
 
+const indexName = "places"
+
+//go:embed schema.json
+var jsonSchema string
+
 func main() {
-	err, esCfg := userInterface()
-	if err != nil {
-		fmt.Println("Crit error")
-		return
-	}
-	esClient, err := elasticsearch.NewClient(esCfg)
+	esClient, err := elasticsearch.NewDefaultClient()
 	if err != nil {
 		log.Fatalf("Error creating the client: %s", err)
 	}
@@ -24,24 +26,22 @@ func main() {
 		log.Fatalf("Error pinging the Elasticsearch server: %s", err)
 	}
 	log.Println("Elasticsearch returned with code___", code.Status())
-	log.Println(elasticsearch.Version)
-	log.Println(esClient.Info())
 
-	query := `{ "query": { "match_all": {} } }`
-	result, err := esClient.Search(
-		esClient.Search.WithIndex("my_index"),
-		esClient.Search.WithBody(strings.NewReader(query)),
-	)
-	fmt.Println("Search executed successfully", err, result.IsError(), result.String())
-}
+	res, err := esClient.Indices.Create(indexName, esClient.Indices.Create.WithBody(strings.NewReader(jsonSchema)))
 
-func userInterface() (err error, cfg elasticsearch.Config) {
-	cfg = elasticsearch.Config{
-		Addresses: []string{
-			"http://localhost:9200",
-		},
-		Username: "elastic",
-		Password: "changeme",
+	if err != nil {
+		log.Fatalf("Cannot create index: %s", err)
 	}
-	return
+	if res.IsError() {
+		log.Fatalf("Cannot create index: %s", res)
+	}
+	res.Body.Close()
+
+	// res , err := esClient.Index(indexName).
+	// query := `{ "query": { "match_all": {} } }`
+	// result, err := esClient.Search(
+	// 	esClient.Search.WithIndex("places"),
+	// 	esClient.Search.WithBody(strings.NewReader(query)),
+	// )
+	// fmt.Println("Search executed successfully", err, result.IsError(), result.String())
 }
