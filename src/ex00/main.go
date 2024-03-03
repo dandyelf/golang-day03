@@ -4,10 +4,13 @@ package main
 
 import (
 	// "fmt"
+	// "context"
 	_ "embed"
-	"github.com/elastic/go-elasticsearch/v8"
+	"fmt"
 	"log"
 	"strings"
+
+	"github.com/elastic/go-elasticsearch/v8"
 )
 
 const indexName = "places"
@@ -26,22 +29,22 @@ func main() {
 		log.Fatalf("Error pinging the Elasticsearch server: %s", err)
 	}
 	log.Println("Elasticsearch returned with code___", code.Status())
-
+	// Create index
 	res, err := esClient.Indices.Create(indexName, esClient.Indices.Create.WithBody(strings.NewReader(jsonSchema)))
 
 	if err != nil {
 		log.Fatalf("Cannot create index: %s", err)
 	}
 	if res.IsError() {
-		log.Fatalf("Cannot create index: %s", res)
+		log.Fatalf("Response error: Cannot create index: %s", res)
 	}
 	res.Body.Close()
 
-	// res , err := esClient.Index(indexName).
-	// query := `{ "query": { "match_all": {} } }`
-	// result, err := esClient.Search(
-	// 	esClient.Search.WithIndex("places"),
-	// 	esClient.Search.WithBody(strings.NewReader(query)),
-	// )
-	// fmt.Println("Search executed successfully", err, result.IsError(), result.String())
+	query := `{ "query": { "match_all": {} } }`
+	result, err := esClient.Search(
+		esClient.Search.WithIndex("places"),
+		esClient.Search.WithBody(strings.NewReader(query)),
+	)
+	fmt.Println("Search executed successfully", err, result.IsError(), result.String())
+	esClient.Indices.Delete([]string{"places"})
 }
