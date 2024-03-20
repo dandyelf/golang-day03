@@ -1,32 +1,28 @@
 BUILD_DIR := build
-TARGET := myWc
+TARGET := myHttp
+OS = $(shell uname)
 
-all: clean build test
+all: build test
 
-build:
-	go build -o $(BUILD_DIR)/$(TARGET) main.go
+build: clean
+	go build -o $(BUILD_DIR)/$(TARGET)
 
 test:
-	@echo '\n'\*************myWc test***************************'\n'
-	@echo Flag -l '(' line feed is on the previous line ')'
-	./$(BUILD_DIR)/$(TARGET) -l ./Makefile
+	cd ../ex00 && make && make clean
+	@echo '\n'\************* $(TARGET) ***************************'\n'
 	@echo
-	@echo Flag -m
-	./$(BUILD_DIR)/$(TARGET) -m ./tests/aaa.txt
-	@echo
-	@echo Flag -w
-	./$(BUILD_DIR)/$(TARGET) -w ./tests/aaa.txt
-	@echo
-	@echo NoFlag
-	./$(BUILD_DIR)/$(TARGET) ./tests/aaa.txt ./tests/bbb.txt
-	@echo
-	@echo Flag cros -w -l
-	./$(BUILD_DIR)/$(TARGET) -w -l Makefile
+	@echo Push elasticsearch data
+ifeq ($(OS), Darwin)
+	open http://localhost:8888/
+else
+	@echo Server start on addres: http://localhost:8888
+endif
+	./$(BUILD_DIR)/$(TARGET)
 	@echo
 	@echo \****************************************
 
-run:
-	./$(BUILD_DIR)/$(TARGET) ./tests/aaa.txt
+run: build
+	./$(BUILD_DIR)/$(TARGET)
 
 clean:
 	rm -rf $(BUILD_DIR)

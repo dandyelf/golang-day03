@@ -6,10 +6,9 @@ all: clean build test
 build:
 	go build -o $(BUILD_DIR)/$(TARGET) main.go
 
-test: myFind myWc
-	mv ../ex00/build/myFind ./build/myFind
-	mv ../ex01/build/myWc ./build/myWc
+test:
 	@echo '\n'\*************myXargs test***************************'\n'
+
 
 	cd build &&	./myFind -f -ext 'txt' ../tests | ./myXargs ./myWc -l
 
@@ -23,7 +22,3 @@ clean:
 
 myFind:
 	cd ../ex00 && make
-
-myWc:
-	cd ../ex01 && make
-
