@@ -1,7 +1,6 @@
 package htmlWriter
 
 import (
-	"encoding/json"
 	"log"
 	"myHttp/types"
 	"net/http"
@@ -52,7 +51,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	list, total, err := store.GetPlaces(perPage, page)
 
 	if err != nil {
-		log.Println("Err response GetPlace")
+		w.Write([]byte("400 Invalid page value: " + strconv.Itoa(page)))
+		return
 	}
 	html := createHtml(total, page-1, page+1, perPage, page, list)
 
@@ -113,19 +113,4 @@ func createHtml(total int, prev int, next int, perPage int, currentPage int, lis
 `)
 
 	return html.String()
-}
-
-// --------------------------------------------------------------------------------
-
-func WritePlacesJson(total int, prev int, next int, restaurants []types.Place, w http.ResponseWriter) error {
-
-	result := types.Foodcorts{
-		Name:     "Places",
-		Total:    strconv.Itoa(total),
-		PrevPage: strconv.Itoa(prev),
-		NextPage: strconv.Itoa(next),
-		LastPage: strconv.Itoa(total / 10),
-	}
-
-	return json.NewEncoder(w).Encode(&result)
 }

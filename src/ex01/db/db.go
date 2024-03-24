@@ -38,9 +38,7 @@ func startDbCli() {
 }
 
 func (ps *PlaceStore) GetPlaces(limit int, offset int) ([]types.Place, int, error) {
-
 	from := offset*limit - limit + 1
-
 	var b bytes.Buffer
 	fmt.Fprintf(&b, `{
 		  "from": %v,
@@ -50,18 +48,17 @@ func (ps *PlaceStore) GetPlaces(limit int, offset int) ([]types.Place, int, erro
 			"match_all": {}
 		  }
 		}`, from, limit)
-
 	response, _ = esClient.Search(
 		esClient.Search.WithBody(&b),
 		esClient.Search.WithPretty(),
 	)
 	defer response.Body.Close()
 	if response.IsError() {
-		log.Fatalf("Error response: %s", response.String())
+		return nil, 0, fmt.Errorf("error response: %s", response.String())
 	}
 	var result types.SearchResult
 	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
+		return nil, 0, fmt.Errorf("error parsing the response body: %s", err)
 	}
 	var list []types.Place
 	for _, hit := range result.Hits.Hits {

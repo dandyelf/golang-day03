@@ -25,10 +25,19 @@ type Place struct {
 }
 
 type Foodcorts struct {
-	Name     string `json:"name"`
-	Total    string `json:"total"`
-	Places   string `json:"places"`
-	PrevPage string `json:"prev_page"`
-	NextPage string `json:"next_page"`
-	LastPage string `json:"last_page"`
+	Name     string  `json:"name"`
+	Total    int     `json:"total"`
+	Places   []Place `json:"places"`
+	PrevPage int     `json:"prev_page"`
+	NextPage int     `json:"next_page"`
+	LastPage int     `json:"last_page"`
+}
+
+type PageData struct {
+	Total       int
+	Prev        int
+	Next        int
+	PerPage     int
+	CurrentPage int
+	List        []Place
 }

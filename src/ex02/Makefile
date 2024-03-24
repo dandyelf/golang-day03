@@ -1,24 +1,32 @@
 BUILD_DIR := build
-TARGET := myXargs
+TARGET := myJson
+OS = $(shell uname)
 
-all: clean build test
+all: build test
 
-build:
-	go build -o $(BUILD_DIR)/$(TARGET) main.go
+build: clean
+	go build -o $(BUILD_DIR)/$(TARGET)
 
 test:
-	@echo '\n'\*************myXargs test***************************'\n'
+	cd ../ex00 && make && make clean
+	@echo '\n'\************* $(TARGET) ***************************'\n'
+	@echo
+	@echo Push elasticsearch data
+ifeq ($(OS), Darwin)
+	open http://localhost:8888/
+else
+	@echo Server start on addres: http://localhost:8888
+endif
+	./$(BUILD_DIR)/$(TARGET)
+	@echo
+	@echo \****************************************
 
-
-	cd build &&	./myFind -f -ext 'txt' ../tests | ./myXargs ./myWc -l
-
-	@echo '\n'\****************************************************'\n'
-
-run:
+run: build
+	@echo Server start on addres: http://localhost:8888
+ifeq ($(OS), Darwin)
+	open http://localhost:8888/
+endif
 	./$(BUILD_DIR)/$(TARGET)
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-myFind:
-	cd ../ex00 && make
