@@ -1,32 +1,31 @@
 BUILD_DIR := build
-TARGET := myRotation
-FILESDIR := ../tests
+TARGET := myGeoserv
+OS = $(shell uname)
 
-all: clean build test
+all: build test
 
-build:
-	go build -o $(BUILD_DIR)/$(TARGET) main.go
+build: clean
+	go build -o $(BUILD_DIR)/$(TARGET)
 
 test:
-	@echo '\n'\*************$(TARGET) test***************************'\n'
+	cd ../ex00 && make && make clean
+	@echo '\n'\************* $(TARGET) ***************************'\n'
+	@echo
+	@echo Push elasticsearch data
+ifeq ($(OS), Darwin)
+	open http://127.0.0.1:8888/api/places?page=3
+else
+	@echo Server start on addres: http://127.0.0.1:8888/api/places?page=3
+endif
+	./$(BUILD_DIR)/$(TARGET)
+	@echo
+	@echo \****************************************
 
-	cd $(BUILD_DIR) && ./$(TARGET) $(FILESDIR)/some_application.txt
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET) $(FILESDIR)/some_application.txt $(FILESDIR)/other_application.txt
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET) -a /data/archive $(FILESDIR)/some_application.txt
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET) -a /data/archive $(FILESDIR)/some_application.txt $(FILESDIR)/other_application.txt
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET)
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET) -a
-	@echo '\n'*
-	cd $(BUILD_DIR) && ./$(TARGET) -a /data/archive
-
-	@echo '\n'\****************************************************'\n'
-
-run:
+run: build
+	@echo Server start on addres: http://127.0.0.1:8888/api/places?page=3
+ifeq ($(OS), Darwin)
+	open http://127.0.0.1:8888/api/places?page=3
+endif
 	./$(BUILD_DIR)/$(TARGET)
 
 clean:

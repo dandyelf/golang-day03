@@ -18,7 +18,7 @@ var store Store
 func HttpServ(st Store) {
 	store = st
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler)
+	mux.HandleFunc("/api/", handler)
 	log.Fatal(http.ListenAndServe(":8888", mux))
 }
 
@@ -47,9 +47,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
 	list, total, err := store.GetPlaces(perPage, page)
-
 	if err != nil {
 		returnError(w, "400 Invalid page value: "+strconv.Itoa(page), http.StatusBadRequest)
 		return
@@ -63,7 +61,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		returnError(w, "400 Server Response Error", http.StatusBadRequest)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
 }
 
 func createJson(data types.PageData, w http.ResponseWriter) error {

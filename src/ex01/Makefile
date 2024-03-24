@@ -13,15 +13,20 @@ test:
 	@echo
 	@echo Push elasticsearch data
 ifeq ($(OS), Darwin)
-	open http://localhost:8888/
+	open http://127.0.0.1:8888/?page=2
 else
-	@echo Server start on addres: http://localhost:8888
+	@echo Server start on addres: http://127.0.0.1:8888/?page=2
 endif
 	./$(BUILD_DIR)/$(TARGET)
 	@echo
 	@echo \****************************************
 
 run: build
+ifeq ($(OS), Darwin)
+	open http://127.0.0.1:8888/?page=2
+else
+	@echo Server start on addres: http://127.0.0.1:8888/?page=2
+endif
 	./$(BUILD_DIR)/$(TARGET)
 
 clean:

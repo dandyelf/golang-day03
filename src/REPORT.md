@@ -23,3 +23,13 @@ Folder src contains elastic_start.sh for starting server from goingfree folder o
 
 * Http server on 8888 port first page
 ![Http server on 8888 port first page](ex01/img/ex01-1.png "Last page")
+
+## Chapter VI
+### Exercise 02: Proper API
+
+* Json server on 8888 port third page
+![Json server on 8888 port third page](ex02/img/ex02-0.png "third page")
+
+* Json server on 8888 port third page
+![Json server on 8888 port third page](ex02/img/ex02-1.png "third page")
+![Json server on 8888 port third page](ex02/img/ex02-2.png "third page")

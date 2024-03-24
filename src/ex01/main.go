@@ -2,10 +2,10 @@ package main
 
 import (
 	"myHttp/db"
-	"myHttp/htmlWriter"
+	"myHttp/htmlW"
 )
 
 func main() {
 	var db db.PlaceStore
-	htmlWriter.HttpServ(&db)
+	htmlW.HttpServ(&db)
 }
