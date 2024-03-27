@@ -1,11 +1,11 @@
 package main
 
 import (
-	"myGeoserv/mainServer"
-	"myHttp/db"
+	"myGeoserv/db"
+	"myGeoserv/mServer"
 )
 
 func main() {
 	var db db.PlaceStore
-	mainServer.HttpServ(&db)
+	mServer.HttpServ(&db)
 }

@@ -3,7 +3,7 @@ package jWriter
 import (
 	"encoding/json"
 	"log"
-	"myHttp/types"
+	"myGeoserv/types"
 	"net/http"
 	"strconv"
 )
@@ -39,6 +39,7 @@ func JWriter(w http.ResponseWriter, r *http.Request, GetPlaces func(limit int, o
 		return
 	}
 	if err := createJson(types.PageData{
+		Name:  "Places",
 		Total: total,
 		Prev:  page - 1,
 		Next:  page + 1,
@@ -49,9 +50,46 @@ func JWriter(w http.ResponseWriter, r *http.Request, GetPlaces func(limit int, o
 	}
 }
 
+func GeoWriter(w http.ResponseWriter, r *http.Request, GetGeoPlaces func(location types.Location) ([]types.Place, error)) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	lat := r.URL.Query().Get("lat")
+	long := r.URL.Query().Get("lon")
+	if len(lat) == 0 || len(long) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	var err error
+	var loc types.Location
+	if loc.Lat, err = strconv.ParseFloat(lat, 64); err != nil {
+		returnError(w, "404 Lat should be a number!", http.StatusBadRequest)
+		return
+	}
+	if loc.Lon, err = strconv.ParseFloat(long, 64); err != nil {
+		returnError(w, "404 Lon should be a number!", http.StatusBadRequest)
+		return
+	}
+	list, err := GetGeoPlaces(loc)
+	if err != nil {
+		returnError(w, "400 BadRequest value: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err := createJson(types.PageData{
+		Name: "Recommend",
+		List: list,
+	}, w); err != nil {
+		returnError(w, "400 Server Response Error"+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+}
+
 func createJson(data types.PageData, w http.ResponseWriter) error {
 	result := types.Foodcorts{
-		Name:     "Places",
+		Name:     data.Name,
 		Total:    data.Total,
 		Places:   data.List,
 		PrevPage: data.Prev,

@@ -51,11 +51,11 @@ func getCsv(csvFileName string) {
 		place.Name = record[1]
 		place.Address = record[2]
 		place.Phone = record[3]
-		if place.Location.Lat, err = strconv.ParseFloat(record[4], 64); err != nil {
-			log.Println("Parse Lat err: ", err)
-		}
-		if place.Location.Lon, err = strconv.ParseFloat(record[5], 64); err != nil {
+		if place.Location.Lon, err = strconv.ParseFloat(record[4], 64); err != nil {
 			log.Println("Parse Lon err: ", err)
+		}
+		if place.Location.Lat, err = strconv.ParseFloat(record[5], 64); err != nil {
+			log.Println("Parse Lat err: ", err)
 		}
 		if checkPlace(place) {
 			list = append(list, place)

@@ -1,7 +1,7 @@
 package hWriter
 
 import (
-	"myHttp/types"
+	"myGeoserv/types"
 	"net/http"
 	"strconv"
 	"strings"
